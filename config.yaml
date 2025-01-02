@@ -1,3 +1,8 @@
 retriever:
   file: "retriever/google-2024-environmental-report.pdf"
+  headers_to_split_on:
+    - ["#", "Header 1"]
+    - ["##", "Header 2"]
+  load_documents: False
+  collection_name: rag-chroma-google
 
