@@ -3,8 +3,19 @@
 import hashlib
 import uuid
 from typing import Any, Literal, Optional, Union
-
+import yaml
 from langchain_core.documents import Document
+
+
+def load_config(file_path="./config.yaml"):
+    """
+    Loads the configuration from the YAML file.
+    """
+    with open(file_path, 'r') as file:
+        config = yaml.safe_load(file)
+    return config
+
+
 
 
 def _generate_uuid(page_content: str) -> str:
@@ -79,3 +90,9 @@ def reduce_docs(
                     existing_ids.add(item_id)
 
     return existing_list + new_list
+
+
+
+
+# Load the configuration file and make it available globally
+config = load_config()
