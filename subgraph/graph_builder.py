@@ -6,9 +6,13 @@ from langchain.retrievers import EnsembleRetriever, BM25Retriever
 from dotenv import load_dotenv
 from subgraph.graph_states import ResearcherState, QueryState
 from utils.prompt import GENERATE_QUERIES_SYSTEM_PROMPT
-
+import logging
 
 load_dotenv()
+
+
+logger = logging.getLogger(__name__)
+
 
 ### from langchain_cohere import CohereEmbeddings
 
@@ -82,7 +86,7 @@ async def generate_queries(
     class Response(TypedDict):
         queries: list[str]
 
-    print("GENERATE QUERIES")
+    logger.info("---GENERATE QUERIES---")
     model = ChatOpenAI(model="gpt-4o-mini-2024-07-18", temperature=0)
     messages = [
         {"role": "system", "content": GENERATE_QUERIES_SYSTEM_PROMPT},
@@ -91,7 +95,7 @@ async def generate_queries(
     response = cast(Response, await model.with_structured_output(Response).ainvoke(messages))
     queries = response["queries"]
     queries.append(state.question)
-    print(f"Queries: {queries}")
+    logger.info(f"Queries: {queries}")
     return {"queries": response["queries"]}
 
 
@@ -109,7 +113,7 @@ async def retrieve_and_rerank_documents(
     Returns:
         dict[str, list[Document]]: A dictionary with a 'documents' key containing the list of retrieved documents.
     """
-    print("---RETRIEVING DOCUMENTS---")
+    logger.info("---RETRIEVING DOCUMENTS---")
     #https://www.kaggle.com/code/marcinrutecki/rag-ensemble-retriever-in-langchain
     #response = await ensemble_retriever.ainvoke(state.query)
 
@@ -117,7 +121,7 @@ async def retrieve_and_rerank_documents(
     compression_retriever = ContextualCompressionRetriever(
         base_compressor=compressor, base_retriever=ensemble_retriever
     )
-    print(f"Query for the retrieval process: {state.query}")
+    logger.info(f"Query for the retrieval process: {state.query}")
     response = compression_retriever.invoke(state.query)
     return {"documents": response}
 

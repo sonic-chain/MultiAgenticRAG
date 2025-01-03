@@ -16,6 +16,9 @@ def load_config(file_path="./config.yaml"):
     return config
 
 
+def new_uuid():
+    return str(uuid.uuid4())
+
 
 
 def _generate_uuid(page_content: str) -> str:

@@ -20,7 +20,10 @@ from langchain_core.documents import Document
 from typing import Any, Literal, Optional, Union
 from langgraph.graph import END, START, StateGraph
 from langgraph.checkpoint.memory import MemorySaver
+import logging
 
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
 
 
 async def analyze_and_route_query(
@@ -42,7 +45,7 @@ async def analyze_and_route_query(
     messages = [
         {"role": "system", "content": ROUTER_SYSTEM_PROMPT}
     ] + state.messages
-    print("---ANALYZE AND ROUTE QUERY---")
+    logging.info("---ANALYZE AND ROUTE QUERY---")
     response = cast(
         Router, await model.with_structured_output(Router).ainvoke(messages)
     )
@@ -98,7 +101,7 @@ async def create_research_plan(
     messages = [
         {"role": "system", "content": RESEARCH_PLAN_SYSTEM_PROMPT}
     ] + state.messages
-    print("---PLAN GENERATION---")
+    logging.info("---PLAN GENERATION---")
     response = cast(Plan, await model.with_structured_output(Plan).ainvoke(messages))
     return {"steps": response["steps"], "documents": "delete"}
 
@@ -146,7 +149,7 @@ async def conduct_research(state: AgentState) -> dict[str, Any]:
     """
     result = await researcher_graph.ainvoke({"question": state.steps[0]}) #graph call directly
     docs = result["documents"]
-    print(f"\n{len(docs)} retrieved for this step.")
+    logging.info(f"\n{len(docs)} retrieved for this step.")
     return {"documents": result["documents"], "steps": state.steps[1:]}
 
 
@@ -187,7 +190,7 @@ async def respond_to_general_query(
     system_prompt = GENERAL_SYSTEM_PROMPT.format(
         logic=state.router["logic"]
     )
-    print("---RESPONSE GENERATION---")
+    logging.info("---RESPONSE GENERATION---")
     messages = [{"role": "system", "content": system_prompt}] + state.messages
     response = await model.ainvoke(messages)
     return {"messages": [response]}
@@ -266,7 +269,7 @@ async def check_hallucinations(
     messages = [
         {"role": "system", "content": system_prompt}
     ] + state.messages
-    print("---CHECK HALLUCINATIONS---")
+    logging.info("---CHECK HALLUCINATIONS---")
     response = cast(GradeHallucinations, await model.with_structured_output(GradeHallucinations).ainvoke(messages))
     
     return {"hallucination": response} 
@@ -288,7 +291,6 @@ def human_approval(
         })
 
         if retry_generation == "y":
-            print("voglio continuare")
             return "respond"
         else:
             return "END"
@@ -309,7 +311,7 @@ async def respond(
     Returns:
         dict[str, list[str]]: A dictionary with a 'messages' key containing the generated response.
     """
-    print("--- RESPONSE GENERATION STEP ---")
+    logging.info("--- RESPONSE GENERATION STEP ---")
     model = ChatOpenAI(model="gpt-4o-2024-08-06", temperature=0, streaming=True)
     context = format_docs(state.documents)
     prompt = RESPONSE_SYSTEM_PROMPT.format(context=context)
