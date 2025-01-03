@@ -82,6 +82,3 @@ class AgentState(InputState):
     documents: Annotated[list[Document], reduce_docs] = field(default_factory=list)
     """Populated by the retriever. This is a list of documents that the agent can reference."""
     hallucination: GradeHallucinations = field(default_factory=lambda: GradeHallucinations(binary_score="0"))
-
-    # Feel free to add additional attributes to your state as needed.
-    # Common examples include retrieved documents, extracted entities, API connections, etc.
