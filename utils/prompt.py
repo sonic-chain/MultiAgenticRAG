@@ -11,7 +11,7 @@ Classify a user inquiry as this if you need more information before you will be 
 - The user complains about an information but doesn't provide the region
 - The user complains about an information but doesn't provide the year
 
-## `langchain`
+## `environmental`
 Classify a user inquiry as this if it can be answered by looking up information related to Environmental Report.  \
 The only topic allowed is about Environmental Report informations.
 
