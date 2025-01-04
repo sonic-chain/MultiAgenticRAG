@@ -25,6 +25,12 @@ import logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
+logging.getLogger("openai").setLevel(logging.WARNING)  
+logging.getLogger("urllib3").setLevel(logging.WARNING) 
+
+logging.getLogger("openai").propagate = False
+logging.getLogger("urllib3").propagate = False
+logging.getLogger("httpx").propagate = False
 
 async def analyze_and_route_query(
     state: AgentState, *, config: RunnableConfig
@@ -46,6 +52,7 @@ async def analyze_and_route_query(
         {"role": "system", "content": ROUTER_SYSTEM_PROMPT}
     ] + state.messages
     logging.info("---ANALYZE AND ROUTE QUERY---")
+    logging.info(f"MESSAGES: {state.messages}")
     response = cast(
         Router, await model.with_structured_output(Router).ainvoke(messages)
     )
@@ -149,7 +156,8 @@ async def conduct_research(state: AgentState) -> dict[str, Any]:
     """
     result = await researcher_graph.ainvoke({"question": state.steps[0]}) #graph call directly
     docs = result["documents"]
-    logging.info(f"\n{len(docs)} retrieved for this step.")
+    step = state.steps[0]
+    logging.info(f"\n{len(docs)} documents retrieved in total for the step: {step}.")
     return {"documents": result["documents"], "steps": state.steps[1:]}
 
 

@@ -12,31 +12,40 @@ import asyncio
 import time
 import builtins
 
+thread = {"configurable": {"thread_id": new_uuid()}}
+#This is a question related to environmental context. tell me the data center PUE efficiency value in Dublin in 2021
 
-async def main():
-    input = builtins.input
-    query = "This is a question related to environmental context. tell me the data center PUE efficiency value in Dublin in 2022"
-
+async def process_query(query):
     inputState = InputState(messages=query)
-
-    thread = {"configurable": {"thread_id": new_uuid()}} 
 
     async for c, metadata in graph.astream(input=inputState, stream_mode="messages", config=thread):
         if c.additional_kwargs.get("tool_calls"):
-            print(c.additional_kwargs.get("tool_calls")[0]["function"].get("arguments"), end="")
+            print(c.additional_kwargs.get("tool_calls")[0]["function"].get("arguments"), end="", flush=True)
         if c.content:
             time.sleep(0.05)
             print(c.content, end="", flush=True)
 
     if len(graph.get_state(thread)[-1]) > 0:
         if len(graph.get_state(thread)[-1][0].interrupts) > 0:
-            response = input("The response may contain incertain informations. Retry the generation? If yes press 'y'")
-            async for c, metadata in graph.astream(Command(resume=response), stream_mode="messages", config=thread):
-                if c.additional_kwargs.get("tool_calls"):
-                    print(c.additional_kwargs.get("tool_calls")[0]["function"].get("arguments"), end="")
-                if c.content:
-                    time.sleep(0.05)
-                    print(c.content, end="", flush=True)
+            response = input("\nThe response may contain uncertain information. Retry the generation? If yes, press 'y': ")
+            if response.lower() == 'y':
+                async for c, metadata in graph.astream(Command(resume=response), stream_mode="messages", config=thread):
+                    if c.additional_kwargs.get("tool_calls"):
+                        print(c.additional_kwargs.get("tool_calls")[0]["function"].get("arguments"), end="")
+                    if c.content:
+                        time.sleep(0.05)
+                        print(c.content, end="", flush=True)
+
+
+async def main():
+    input = builtins.input
+    print("Enter your query (type '-q' to quit):")
+    while True:
+        query = input("> ")
+        if query.strip().lower() == "-q":
+            print("Exiting...")
+            break
+        await process_query(query)
 
 
 if __name__ == "__main__":
