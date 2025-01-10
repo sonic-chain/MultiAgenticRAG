@@ -32,9 +32,3 @@ python3 app.py
 ```
 
 Now ask your question based on the document: https://sustainability.google/reports/google-2024-environmental-report/
-
-
-By combining advanced retrieval, reasoning, and verification mechanisms, this project sets a new standard for intelligent, reliable AI systems.
-
-
-
