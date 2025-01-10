@@ -23,8 +23,6 @@ Then run:
 python3 -m retriever.retriever
 ```
 
-### Notify the Application
-
 Once the PDF has been processed and indexed, you can start the application by running the following command:
 
 ```bash
