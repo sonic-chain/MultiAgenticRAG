@@ -6,8 +6,6 @@ This repository showcases the implementation of a **Multi-Agent Research RAG (Re
 
 To get started with this project, follow these steps:
 
-### 1. Clone the Repository
-
 First, clone the repository to your local machine:
 
 ```bash
