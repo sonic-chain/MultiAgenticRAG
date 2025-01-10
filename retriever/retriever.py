@@ -113,9 +113,10 @@ if __name__ == "__main__":
     headers_to_split_on = config["retriever"]["headers_to_split_on"]
     filepath = config["retriever"]["file"]
     collection_name = config["retriever"]["collection_name"]
+    load_documents = config["retriever"]["load_documents"]
 
     print("Retriever entry")
-    if config["retriever"]["load_documents"]:
+    if load_documents:
         # Document Processing
         logger.info("Initializing document processor.")
         processor = DocumentProcessor(headers_to_split_on)  # Replace with actual source
@@ -128,7 +129,7 @@ if __name__ == "__main__":
 
     # Index Building
     logger.info("Initializing index builder.")
-    index_builder = IndexBuilder(docs_list, collection_name, persist_directory="vector_db")
+    index_builder = IndexBuilder(docs_list, collection_name, persist_directory="vector_db", load_documents=load_documents)
     index_builder.build_vectorstore()
 
     try:
