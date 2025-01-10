@@ -263,10 +263,10 @@ def format_docs(docs: Optional[list[Document]]) -> str:
 async def check_hallucinations(
     state: AgentState, *, config: RunnableConfig
 ) -> dict[str, Any]:
-    """Analyze the user's query and determine the appropriate routing.
+    """Analyze the user's query and checks if the response is supported by the set of facts based on the document retrieved,
+    providing a binary score result.
 
-    This function uses a language model to classify the user's query and decide how to route it
-    within the conversation flow.
+    This function uses a language model to analyze the user's query and gives a binary score result.
 
     Args:
         state (AgentState): The current state of the agent, including conversation history.
@@ -296,12 +296,10 @@ def human_approval(
     _binary_score = state.hallucination.binary_score
     if _binary_score == "1":
         return "END"
-    elif _binary_score == "0":
+    else:
         retry_generation = interrupt(
         {
             "question": "Is this correct?",
-            # Surface the output that should be
-            # reviewed and approved by the human.
             "llm_output": state.messages[-1]
         })
 

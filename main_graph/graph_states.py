@@ -6,6 +6,7 @@ from langchain_core.messages import AnyMessage
 from langgraph.graph import add_messages
 
 from utils.utils import reduce_docs
+from pydantic import BaseModel, Field
 
 @dataclass(kw_only=True)
 class InputState:
@@ -55,11 +56,8 @@ class Router(TypedDict):
     """Classify user query."""
 
     logic: str
-    type: Literal["more-info", "langchain", "general"]
+    type: Literal["more-info", "environmental", "general"]
 
-
-
-from pydantic import BaseModel, Field
 
 class GradeHallucinations(BaseModel):
     """Binary score for hallucination present in generation answer."""
