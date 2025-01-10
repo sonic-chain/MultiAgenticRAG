@@ -15,6 +15,10 @@ git clone https://github.com/nicoladisabato/MultiAgenticRAG.git
 cd MultiAgenticRAG
 ```
 
+```bash
+pip install -r requirements.txt
+```
+
 Then open the config.yml file located in the root directory of the project. Set the value of load_documents to **true** to ensure the necessary documents are loaded into the vector database:
 
 Then run:
