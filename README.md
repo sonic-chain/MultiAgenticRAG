@@ -1,6 +1,6 @@
 ## MultiAgentic RAG
 
-This repository showcases the implementation of a **Multi-Agent Research RAG (Retriever-Augmented Generation) Tool** built with **LangGraph**. This project leverages the capabilities of agent-based frameworks to handle complex queries by breaking them down into manageable steps, dynamically utilizing tools, and ensuring response accuracy through error correction and hallucination checks.
+This repository showcases the implementation of a **Multi-Agent Research RAG (Retriever-Augmented Generation) Tool** built with **LangGraph**. This project leverages the capabilities of agent-based frameworks to handle complex queries by breaking them down into manageable steps, dynamically utilizing tools, and ensuring response accuracy through error correction and hallucination checks. (https://ai.gopubby.com/building-rag-research-multi-agent-with-langgraph-1bd47acac69f)
 
 ## Getting Started
 
